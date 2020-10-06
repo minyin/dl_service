@@ -1,6 +1,6 @@
 const { Service } = require('egg');
 
-const service = require('egg').Service;
+const Service = require('egg').Service;
 
 class weatherService extends Service{
     async get() {
