@@ -51,7 +51,7 @@ class weatherService extends Service{
         // gzip、lang、unit均为可选参数
         let params = {
             // publicid: publicKey,
-            location: '101010100',
+            location: '101021200', // 徐汇区
             key: privateKey,
             // t: Math.floor(Date.now() / 1e3),
             unit: 'm', // 度量衡单位参数选择(默认公制单位)
