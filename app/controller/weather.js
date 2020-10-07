@@ -5,7 +5,7 @@ const Controller = require('egg').Controller;
 class WeatherController extends Controller {
   async getWeather() {
     const { ctx } = this;
-    const weatherInfo = ctx.service.weather.get();
+    const weatherInfo = await ctx.service.weather.get();
     ctx.body = weatherInfo;
 
     // todo: 天气接口使用https://dev.heweather.com/docs/api/geo
