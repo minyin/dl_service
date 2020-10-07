@@ -2,7 +2,8 @@ const md5 = require('blueimp-md5');
 const { Service } = require('egg');
 
 const threeDayWeatherUrl = 'https://devapi.heweather.net/v7/weather/3d';
-const privateKey = 'c2669685c3b746f58939883da0f03075';
+const privateKey = '850ced8fb76b4753bbf2aa24423fe70e';
+const publicKey = 'HE2010072306511785';
 
 class weatherService extends Service{
     getSignature(parameterObject, privateKey) { // 加密签名算法
@@ -36,7 +37,6 @@ class weatherService extends Service{
         return md5(str);
     }
 
-    // get() {
     async get() {
         const {
             ctx
@@ -50,20 +50,29 @@ class weatherService extends Service{
         // key(必选): 用户认证密钥
         // gzip、lang、unit均为可选参数
         let params = {
-            location: `116.41,39.92`,
-            t: Math.floor(Date.now() / 1e3),
+            // publicid: publicKey,
+            location: '101010100',
+            key: privateKey,
+            // t: Math.floor(Date.now() / 1e3),
             unit: 'm', // 度量衡单位参数选择(默认公制单位)
         };
-        params.sign = this.getSignature(params, privateKey);
+        // params.key = this.getSignature(params, privateKey);
         let query = [];
         for (let i in params) {
             query.push(`${i}=${encodeURIComponent(params[i])}`)
         }
-        let url = threeDayWeatherUrl + '?' + query.join('&')
-        const result = await ctx.curl(url);
+        let url = threeDayWeatherUrl + '?' + query.join('&');
+        // const result = await ctx.curl(url);
+        const result = await ctx.curl(threeDayWeatherUrl, {
+            dataType: 'json',
+            // dataAsQueryString: true,
+            data: params,
+        });
         return {
-            data: result,
-            ret_code: 0,
+            url: url,
+            params: params,
+            data: result.data,
+            ret_code: result.status,
         }
     }
 }
