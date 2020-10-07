@@ -32,11 +32,14 @@ class weatherService extends Service{
         return md5(str);
     }
 
-    async get() {
+    // async get() {
+    get() {
         // todo: 这里发起httpClient请求
         // todo: 这里封装一个拼接加密签名的函数
         return {
-            data: {},
+            data: {
+                weather: '明天天气晴朗',
+            },
             ret_code: 0,
         }
     }
