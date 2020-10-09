@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const md5 = require('blueimp-md5');
 const { Service } = require('egg');
 
@@ -37,35 +38,39 @@ class weatherService extends Service{
         return md5(str);
     }
 
-    async get() {
+    async get(isSignature = true) { // 加密签名的方式则避免了API KEY由于各种原因泄露给第三方而导致的风险，默认打开
         const {
             ctx
         } = this;
-        // todo: 这里发起httpClient请求
-        // todo: 这里封装一个拼接加密签名的函数getSignature()
-        
-        // todo: 请求参数包括必选和可选参数，如不填写可选参数将使用其默认值，参数之间使用&进行分隔。
 
         // location(必选): 需要查询地区的LocationID或以逗号分隔的经度/纬度坐标（十进制），LocationID可通过城市搜索服务获取。例如： location=101010100 或 location=116.41,39.92
         // key(必选): 用户认证密钥
         // gzip、lang、unit均为可选参数
+
         let params = {
-            // publicid: publicKey,
-            location: '101021200', // 徐汇区
-            key: privateKey,
-            // t: Math.floor(Date.now() / 1e3),
+            location: '101021200', // 需要查询的位置，徐汇区
             unit: 'm', // 度量衡单位参数选择(默认公制单位)
         };
-        // params.key = this.getSignature(params, privateKey);
+
+        // 如果不使用数字签名，则直接带上API KEY
+        if (isSignature) {
+            params = {
+                ...params,
+                publicid: publicKey, // 数字签名需要
+                t: Math.floor(Date.now() / 1e3), // 数字签名需要
+            }
+            params.sign = this.getSignature(params, privateKey);
+        }
+        else {
+            params.key = privateKey;
+        }
         let query = [];
         for (let i in params) {
             query.push(`${i}=${encodeURIComponent(params[i])}`)
         }
         let url = threeDayWeatherUrl + '?' + query.join('&');
-        // const result = await ctx.curl(url);
         const result = await ctx.curl(threeDayWeatherUrl, {
             dataType: 'json',
-            // dataAsQueryString: true,
             data: params,
         });
         return {
