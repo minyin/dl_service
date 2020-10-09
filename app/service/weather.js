@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const md5 = require('blueimp-md5');
 const { Service } = require('egg');
+const { result } = require('lodash');
 
 const threeDayWeatherUrl = 'https://devapi.heweather.net/v7/weather/3d';
 const privateKey = '850ced8fb76b4753bbf2aa24423fe70e';
@@ -68,17 +69,18 @@ class weatherService extends Service{
         for (let i in params) {
             query.push(`${i}=${encodeURIComponent(params[i])}`)
         }
-        let url = threeDayWeatherUrl + '?' + query.join('&');
-        const result = await ctx.curl(threeDayWeatherUrl, {
+        // let url = threeDayWeatherUrl + '?' + query.join('&');
+
+        // todo：取出有效数据，并且根据返回进行提示
+        const callback = await ctx.curl(threeDayWeatherUrl, {
             dataType: 'json',
             data: params,
         });
-        return {
-            url: url,
-            params: params,
-            data: result.data,
-            ret_code: result.status,
-        }
+        let res = {
+            data: callback.data,
+            ret_code: callback.status === 200 ? 0:callback.status,
+        };
+        return res;
     }
 }
 
