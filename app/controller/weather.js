@@ -5,6 +5,7 @@ const Controller = require('egg').Controller;
 class WeatherController extends Controller {
   async getWeather() {
     const { ctx } = this;
+    // TODO: 将的地址location作为接口参数接受和使用
     const weatherInfo = await ctx.service.weather.get(true);
     ctx.body = weatherInfo;
 
