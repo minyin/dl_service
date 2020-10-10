@@ -1,7 +1,6 @@
 const _ = require('lodash');
 const md5 = require('blueimp-md5');
 const { Service } = require('egg');
-const { result } = require('lodash');
 
 const threeDayWeatherUrl = 'https://devapi.heweather.net/v7/weather/3d';
 const privateKey = '850ced8fb76b4753bbf2aa24423fe70e';
@@ -39,17 +38,22 @@ class weatherService extends Service{
         return md5(str);
     }
 
-    async get(isSignature = true) { // 加密签名的方式则避免了API KEY由于各种原因泄露给第三方而导致的风险，默认打开
+    async get(query) { // 加密签名的方式则避免了API KEY由于各种原因泄露给第三方而导致的风险，默认打开
         const {
             ctx
         } = this;
+
+        const {
+            isSignature = true,
+        } = query;
 
         // location(必选): 需要查询地区的LocationID或以逗号分隔的经度/纬度坐标（十进制），LocationID可通过城市搜索服务获取。例如： location=101010100 或 location=116.41,39.92
         // key(必选): 用户认证密钥
         // gzip、lang、unit均为可选参数
 
         let params = {
-            location: '101021200', // 需要查询的位置，徐汇区
+            ...query,
+            // location: '101021200', // 需要查询的位置，徐汇区
             unit: 'm', // 度量衡单位参数选择(默认公制单位)
         };
 
@@ -65,18 +69,14 @@ class weatherService extends Service{
         else {
             params.key = privateKey;
         }
-        let query = [];
-        for (let i in params) {
-            query.push(`${i}=${encodeURIComponent(params[i])}`)
-        }
-        // let url = threeDayWeatherUrl + '?' + query.join('&');
 
-        // todo：取出有效数据，并且根据返回进行提示
+        // 取出有效数据，并且根据返回进行提示
         const callback = await ctx.curl(threeDayWeatherUrl, {
             dataType: 'json',
             data: params,
         });
         let res = {
+            query: query,
             data: callback.data,
             ret_code: callback.status === 200 ? 0:callback.status,
         };
