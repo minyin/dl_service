@@ -76,7 +76,6 @@ class weatherService extends Service{
             data: params,
         });
         let res = {
-            query: query,
             data: callback.data,
             ret_code: callback.status === 200 ? 0:callback.status,
         };
