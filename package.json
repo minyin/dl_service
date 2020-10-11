@@ -9,8 +9,11 @@
   "dependencies": {
     "blueimp-md5": "^2.18.0",
     "egg": "^2.15.1",
+    "egg-mysql": "^3.0.0",
     "egg-scripts": "^2.11.0",
-    "lodash": "^4.17.20"
+    "egg-sequelize": "^6.0.0",
+    "lodash": "^4.17.20",
+    "mysql2": "^2.2.5"
   },
   "devDependencies": {
     "autod": "^3.0.1",
