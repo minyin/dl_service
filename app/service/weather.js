@@ -52,8 +52,8 @@ class weatherService extends Service{
         // gzip、lang、unit均为可选参数
 
         let params = {
+            location: '101021200', // 需要查询的位置，徐汇区
             ...query,
-            // location: '101021200', // 需要查询的位置，徐汇区
             unit: 'm', // 度量衡单位参数选择(默认公制单位)
         };
 
