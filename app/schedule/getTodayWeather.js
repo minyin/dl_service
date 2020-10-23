@@ -1,7 +1,7 @@
 const Subscription = require('egg').Subscription;
 
 class GetTodayWeather extends Subscription{
-    // TODO: 建立db库表，用来存储用户的地址信息，以及每天定时读取的天气信息
+    // TODO: 通过数据库工具，在服务器上建立db库表，用来存储用户的地址信息，以及每天定时读取的天气信息
     // TODO: 写一个脚本，可以读写db
     // TODO: 每天5点15分，拉取当天天气信息，然后写入db中
     // TODO: 每天7点，开始推送天气信息
