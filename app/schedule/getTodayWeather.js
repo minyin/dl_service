@@ -5,6 +5,7 @@ class GetTodayWeather extends Subscription{
     // TODO: 写一个脚本，可以读写db
     // TODO: 每天5点15分，拉取当天天气信息，然后写入db中
     // TODO: 每天7点，开始推送天气信息
+    // TODO: 台式机也连接上了服务器
     static get schedule() {
         return {
             cron: '0 0 */3 * * *', // todo: 每三小时准点执行一次
